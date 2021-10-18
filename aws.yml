@@ -1,11 +1,10 @@
 name: deploy to lambda
-on: [push]
+on: 
+  push:
+    branches:
+      - master
 jobs:
-  deploy_source:
-    name: build and deploy lambda
-    strategy:
-      matrix:
-        node-version: [12.x]
+  deploy_lambda:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -13,6 +12,11 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: '3.7'
+      - name: npm install
+        env:
+          CI: true
+        run: |
+          npm ci
       - name: zip
         uses: montudor/action-zip@v0.1.0
         with:
